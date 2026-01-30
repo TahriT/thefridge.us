@@ -1,0 +1,10 @@
+name = "thefridge-us"
+compatibility_date = "2024-01-01"
+
+# Cloudflare Pages serves the landing page (no auth, no backend)
+# For full app with persistence, use Docker self-hosting
+
+[env.production]
+routes = [
+  { pattern = "thefridge.us", custom_domain = true }
+]

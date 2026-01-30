@@ -1,0 +1,8 @@
+# Cloudflare Pages redirects
+# Serve landing page by default
+/  /landing.html  200
+
+# Block access to app files on Cloudflare Pages (only for self-hosted)
+/index.html  /landing.html  301
+/server.js  /landing.html  301
+/script.js  /landing.html  301

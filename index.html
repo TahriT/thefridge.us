@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Fridge</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    
+    <!-- Three.js Dependencies -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script type="module" src="kitchen3d.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <!-- 3D Scene Containers -->
+    <div id="three-container"></div>
+    <div id="css-container"></div>
+
+    <!-- Magnet Overlay - positioned over 3D fridge door -->
+    <div id="magnetOverlay">
+        <div class="magnet-surface" id="magnetSurface">
+            <div class="instructions">
+                <p>🧲 Drag & Drop Images Here</p>
+                <p>👆 Click Handle to Open</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2>🔐 Fridge Access</h2>
+            <div id="loginForm">
+                <input type="text" id="username" placeholder="Username" />
+                <input type="password" id="pin" placeholder="PIN" />
+                <button onclick="login()">Login</button>
+                <button onclick="register()">Register</button>
+            </div>
+            <div id="loginError" class="error-msg"></div>
+        </div>
+    </div>
+
+    <div id="app" style="display: none;">
+        <div class="kitchen-scene">
+            <!-- Atmosphere Overlays -->
+            <div class="vignette-overlay"></div>
+            <div class="noise-overlay"></div>
+
+            <!-- Mail Stack Table (Left Side) -->
+            <div class="mail-stack-table">
+                <div class="table-surface">
+                    <div class="mail-stack">
+                        <div class="mail-stack-header">
+                            <h3>📬 Mail</h3>
+                            <span class="mail-count" id="mailCount">0</span>
+                        </div>
+                        <div id="mailStackList">
+                            <div class="mail-stack-empty">No mail yet</div>
+                        </div>
+                        <div class="auto-open-toggle">
+                            <input type="checkbox" id="autoOpenMail">
+                            <label for="autoOpenMail">Auto-add mail photos to fridge</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kitchen Background Layers -->
+            <div class="wall-layer subway-tile" id="wallLayer"></div>
+            <div class="floor-layer"></div>
+            
+            <!-- Window with Weather -->
+            <div class="window-frame" id="windowFrame">
+                <div class="window-glass" id="windowGlass">
+                    <!-- Sky Layer (Background) -->
+                    <div class="sky-gradient daytime" id="skyGradient"></div>
+                    
+                    <!-- Scene Layer (City/Yard/Mountains/Beach) -->
+                    <div class="outdoor-scene city" id="outdoorScene">
+                        <div class="window-lights"></div>
+                        <div class="wave-layer"></div>
+                    </div>
+                    
+                    <!-- Weather Layers (Transparent Overlays) -->
+                    <div class="weather-layer" id="weatherRain"></div>
+                    <div class="weather-layer" id="weatherSnow"></div>
+                    <div class="weather-layer wind" id="weatherWind"></div>
+                    <div class="weather-layer" id="weatherSunny"></div>
+                    <div class="weather-layer" id="weatherCloudy"></div>
+                </div>
+                <div class="window-sill"></div>
+                <div class="weather-info" id="weatherInfo">
+                    <span class="temperature">--°</span>
+                    <span class="condition">--</span>
+                </div>
+            </div>
+            
+            <!-- Dynamic Lighting Layers -->
+            <div class="lighting-layer" id="lightingLayer">
+                <div class="light-cone fridge-light"></div>
+                <div class="light-cone window-light" id="windowLight"></div>
+            </div>
+            
+            <div class="fridge-container">
+            <!-- The Interior (Settings & Config) -->
+            <div class="fridge-interior">
+                <div class="shelves">
+                    <div class="shelf">
+                        <div class="settings-panel">
+                            <h2>Fridge OS Config</h2>
+                            <div class="form-group">
+                                <label>Fridge Color</label>
+                                <input type="color" id="colorPicker" value="#e8e8e8">
+                            </div>
+                            <div class="form-group">
+                                <label>Wall Theme</label>
+                                <select id="wallTheme">
+                                    <option value="subway-tile">Subway Tile</option>
+                                    <option value="painted">Painted Wall</option>
+                                    <option value="wood-panel">Wood Panel</option>
+                                    <option value="retro-yellow">Retro Yellow</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Visual Style</label>
+                                <select id="visualStyle">
+                                    <option value="realistic">Lo-Fi Realistic</option>
+                                    <option value="pixel">8-Bit Pixel Art</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Weather Zipcode (US)</label>
+                                <input type="text" id="zipcode" placeholder="90210" maxlength="5">
+                                <small>Leave empty for random weather</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Outdoor View</label>
+                                <select id="outdoorScene">
+                                    <option value="city">City Skyline 🏙️</option>
+                                    <option value="yard">Backyard 🌳</option>
+                                    <option value="mountains">Mountains ⛰️</option>
+                                    <option value="beach">Beach 🏖️</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Ambient Lighting</label>
+                                <input type="range" id="ambientIntensity" min="20" max="100" value="60">
+                                <small>Adjust atmosphere brightness</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Auth Provider</label>
+                                <select disabled>
+                                    <option>Local (Simple)</option>
+                                    <option>Authelia</option>
+                                    <option>Authentik</option>
+                                </select>
+                                <small>Backend integration required</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Handle Position</label>
+                                <select id="handlePos">
+                                    <option value="right">Right</option>
+                                    <option value="left">Left</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="shelf">
+                        <div class="mail-panel">
+                            <h2>📬 Mail & Circles</h2>
+                            <div class="mail-list" id="mailList">
+                                <p class="loading">Loading mail...</p>
+                            </div>
+                            <div class="circle-actions">
+                                <button onclick="showCircleModal()" class="btn-secondary">Manage Circles</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="shelf"></div>
+                </div>
+            </div>
+
+            <!-- The Door (Visuals & Magnets) -->
+            <div class="fridge-door" id="fridgeDoor">
+                <div class="logo-sticker">The Fridge</div>
+                
+                <div class="magnet-surface" id="magnetSurface">
+                    <!-- Drop zone for magnets -->
+                    <div class="instructions">
+                        <p>Drag & Drop Images Here</p>
+                        <p>Click Handle to Open</p>
+                    </div>
+                </div>
+
+                <div class="handle" id="doorHandle"></div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Hidden file input for adding images and videos -->
+    <input type="file" id="fileInput" accept="image/*,video/*" style="display: none;" multiple>
+
+    <script>
+        // Auto-detect API URL based on environment
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000/api'
+            : '/api'; // For Cloudflare Pages, proxy through functions
+        let sessionId = localStorage.getItem('sessionId');
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

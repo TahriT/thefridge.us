@@ -1,0 +1,1740 @@
+:root {
+    --fridge-color: #E8E8E8; /* Realistic Stainless Steel Gray */
+    --fridge-width: 600px;
+    --fridge-height: 900px;
+    --frame-color: #707070;
+    --shadow-color: rgba(0,0,0,0.3);
+    --handle-color: #C0C0C0;
+    --bg-color: #3A2F29;
+    --wall-color: #F5F5DC;
+    --floor-color: #8B7355;
+    --ambient-light: rgba(255, 248, 220, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #2A2520 0%, #3A2F29 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Kitchen Scene Container */
+.kitchen-scene {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    transition: background 1s ease;
+}
+
+.kitchen-scene.daytime {
+    background: linear-gradient(180deg, #4A6FA5 0%, #7B93B3 100%);
+}
+
+.kitchen-scene.evening {
+    background: linear-gradient(180deg, #2A2F4F 0%, #4A3C5A 100%);
+}
+
+.kitchen-scene.night {
+    background: linear-gradient(180deg, #0A0E1A 0%, #1A1F2E 100%);
+}
+
+/* Wall Layer */
+.wall-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70%;
+    z-index: 0;
+    transition: background 0.5s ease;
+}
+
+.wall-layer.subway-tile {
+    background: 
+        linear-gradient(90deg, #ddd 1px, transparent 1px),
+        linear-gradient(180deg, #ddd 1px, transparent 1px),
+        linear-gradient(180deg, #F5F5F5 0%, #FAFAFA 100%);
+    background-size: 120px 60px, 120px 60px, 100% 100%;
+}
+
+.wall-layer.painted {
+    background: linear-gradient(180deg, #E8E4D9 0%, #D4CFC4 100%);
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.05);
+}
+
+.wall-layer.wood-panel {
+    background: 
+        repeating-linear-gradient(90deg, #A67C52 0px, #8B6F47 2px, #A67C52 4px, #A67C52 200px),
+        linear-gradient(180deg, #B8956A 0%, #8B6F47 100%);
+}
+
+.wall-layer.retro-yellow {
+    background: 
+        linear-gradient(90deg, #E5C07B 1px, transparent 1px),
+        linear-gradient(180deg, #E5C07B 1px, transparent 1px),
+        linear-gradient(180deg, #F5E6A0 0%, #E5D68A 100%);
+    background-size: 80px 80px, 80px 80px, 100% 100%;
+}
+
+/* Floor Layer */
+.floor-layer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    background: linear-gradient(180deg, #6B5547 0%, #4A3C32 100%);
+    box-shadow: inset 0 20px 40px rgba(0,0,0,0.3);
+    z-index: 0;
+}
+
+.floor-layer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255,255,255,0.2) 50%, 
+        transparent 100%);
+}
+
+/* ================================================
+   WINDOW WITH WEATHER
+   ================================================ */
+
+.window-frame {
+    position: fixed;
+    top: 80px;
+    right: 100px;
+    width: 320px;
+    height: 400px;
+    background: linear-gradient(135deg, #3A3A3A 0%, #2A2A2A 100%);
+    border-radius: 8px;
+    box-shadow: 
+        inset 2px 2px 5px rgba(0,0,0,0.5),
+        inset -2px -2px 5px rgba(255,255,255,0.1),
+        10px 10px 30px rgba(0,0,0,0.4);
+    z-index: 1;
+    padding: 12px;
+}
+
+.window-glass {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: rgba(135, 206, 235, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+}
+
+.sky-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: background 1s ease;
+    z-index: 1;
+}
+
+/* ================================================
+   OUTDOOR PERSPECTIVE SCENES - LAYERED CARTOON STYLE
+   ================================================ */
+
+.outdoor-scene {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* ===== CITY SCENE ===== */
+.outdoor-scene.city {
+    background: none;
+}
+
+/* City - Far Buildings Layer */
+.outdoor-scene.city::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70%;
+    background: 
+        /* Tall skyscraper 1 */
+        linear-gradient(to bottom, #6B7B8C 0%, #5A6A7A 100%) no-repeat 5% bottom / 25px 55%,
+        /* Tall skyscraper 2 */
+        linear-gradient(to bottom, #7A8A9A 0%, #6A7A8A 100%) no-repeat 15% bottom / 35px 65%,
+        /* Medium building */
+        linear-gradient(to bottom, #8A9AAA 0%, #7A8A9A 100%) no-repeat 28% bottom / 40px 45%,
+        /* Wide building */
+        linear-gradient(to bottom, #6A7A8A 0%, #5A6A7A 100%) no-repeat 42% bottom / 55px 40%,
+        /* Tall tower */
+        linear-gradient(to bottom, #7B8B9B 0%, #6B7B8B 100%) no-repeat 58% bottom / 20px 70%,
+        /* Spire */
+        linear-gradient(to bottom, #8B9BAB 0%, #7B8B9B 100%) no-repeat 60% bottom / 8px 75%,
+        /* Medium buildings cluster */
+        linear-gradient(to bottom, #6B7B8B 0%, #5B6B7B 100%) no-repeat 72% bottom / 45px 50%,
+        linear-gradient(to bottom, #7B8B9B 0%, #6B7B8B 100%) no-repeat 82% bottom / 30px 55%,
+        linear-gradient(to bottom, #8B9BAB 0%, #7B8B9B 100%) no-repeat 92% bottom / 35px 35%;
+    z-index: 1;
+}
+
+/* City - Near Buildings Layer */
+.outdoor-scene.city::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: 
+        /* Foreground buildings - darker, closer */
+        linear-gradient(to bottom, #4A5A6A 0%, #3A4A5A 100%) no-repeat 0% bottom / 50px 40%,
+        linear-gradient(to bottom, #3A4A5A 0%, #2A3A4A 100%) no-repeat 20% bottom / 60px 35%,
+        linear-gradient(to bottom, #4A5A6A 0%, #3A4A5A 100%) no-repeat 38% bottom / 45px 30%,
+        linear-gradient(to bottom, #3A4A5A 0%, #2A3A4A 100%) no-repeat 55% bottom / 70px 38%,
+        linear-gradient(to bottom, #4A5A6A 0%, #3A4A5A 100%) no-repeat 75% bottom / 55px 32%,
+        linear-gradient(to bottom, #3A4A5A 0%, #2A3A4A 100%) no-repeat 90% bottom / 40px 28%;
+    z-index: 2;
+}
+
+/* City Windows Overlay */
+.outdoor-scene.city .window-lights {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70%;
+    background-image: radial-gradient(#FFE4B0 1px, transparent 1px);
+    background-size: 8px 10px;
+    opacity: 0.4;
+    z-index: 3;
+    animation: cityLights 4s ease-in-out infinite alternate;
+}
+
+@keyframes cityLights {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.6; }
+}
+
+/* ===== YARD SCENE ===== */
+.outdoor-scene.yard {
+    background: none;
+}
+
+/* Yard - Grass Layer */
+.outdoor-scene.yard::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to bottom, #7CB342 0%, #558B2F 60%, #33691E 100%);
+    border-radius: 100% 100% 0 0 / 30% 30% 0 0;
+    z-index: 1;
+}
+
+/* Yard - Trees Layer */
+.outdoor-scene.yard::after {
+    content: '';
+    position: absolute;
+    bottom: 30%;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    background: 
+        /* Tree 1 - Left */
+        radial-gradient(ellipse 40px 50px at 20% 70%, #2E7D32 60%, transparent 60%),
+        radial-gradient(ellipse 35px 40px at 18% 60%, #388E3C 60%, transparent 60%),
+        radial-gradient(ellipse 30px 35px at 22% 55%, #43A047 60%, transparent 60%),
+        linear-gradient(to bottom, #5D4037 0%, #4E342E 100%) no-repeat 19% 85% / 8px 25%,
+        
+        /* Tree 2 - Center-Left */
+        radial-gradient(ellipse 50px 60px at 40% 65%, #1B5E20 60%, transparent 60%),
+        radial-gradient(ellipse 45px 55px at 38% 55%, #2E7D32 60%, transparent 60%),
+        radial-gradient(ellipse 35px 40px at 42% 50%, #388E3C 60%, transparent 60%),
+        linear-gradient(to bottom, #5D4037 0%, #4E342E 100%) no-repeat 39% 85% / 10px 30%,
+        
+        /* Tree 3 - Right */
+        radial-gradient(ellipse 45px 55px at 75% 68%, #2E7D32 60%, transparent 60%),
+        radial-gradient(ellipse 40px 45px at 73% 58%, #388E3C 60%, transparent 60%),
+        radial-gradient(ellipse 30px 35px at 77% 52%, #4CAF50 60%, transparent 60%),
+        linear-gradient(to bottom, #5D4037 0%, #4E342E 100%) no-repeat 74% 85% / 9px 28%;
+    z-index: 2;
+}
+
+/* ===== MOUNTAIN SCENE ===== */
+.outdoor-scene.mountains {
+    background: none;
+}
+
+/* Mountains - Far Range */
+.outdoor-scene.mountains::before {
+    content: '';
+    position: absolute;
+    bottom: 20%;
+    left: -10%;
+    width: 120%;
+    height: 60%;
+    background: 
+        /* Mountain 1 */
+        linear-gradient(130deg, transparent 40%, #78909C 40%, #78909C 50%, transparent 50%),
+        linear-gradient(50deg, transparent 40%, #607D8B 40%, #607D8B 50%, transparent 50%),
+        /* Mountain 2 */
+        linear-gradient(135deg, transparent 35%, #90A4AE 35%, #90A4AE 48%, transparent 48%),
+        /* Mountain 3 */
+        linear-gradient(45deg, transparent 38%, #78909C 38%, #78909C 52%, transparent 52%);
+    background-size: 200px 200px, 200px 200px, 180px 180px, 220px 220px;
+    background-position: 10% 100%, 10% 100%, 50% 100%, 80% 100%;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+
+/* Mountains - Near Range + Snow Caps */
+.outdoor-scene.mountains::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -5%;
+    width: 110%;
+    height: 55%;
+    background: 
+        /* Snow cap 1 */
+        linear-gradient(130deg, transparent 42%, #ECEFF1 42%, #ECEFF1 46%, transparent 46%),
+        /* Main mountain 1 */
+        linear-gradient(130deg, transparent 40%, #546E7A 40%, #546E7A 55%, transparent 55%),
+        /* Snow cap 2 */
+        linear-gradient(50deg, transparent 38%, #ECEFF1 38%, #ECEFF1 42%, transparent 42%),
+        /* Main mountain 2 */
+        linear-gradient(50deg, transparent 35%, #455A64 35%, #455A64 55%, transparent 55%),
+        /* Forest base */
+        linear-gradient(to bottom, #2E7D32 0%, #1B5E20 100%);
+    background-size: 250px 250px, 250px 250px, 200px 200px, 200px 200px, 100% 30%;
+    background-position: 25% 100%, 25% 100%, 65% 100%, 65% 100%, 0 100%;
+    background-repeat: no-repeat;
+    z-index: 2;
+}
+
+/* ===== BEACH SCENE ===== */
+.outdoor-scene.beach {
+    background: none;
+}
+
+/* Beach - Ocean Layer */
+.outdoor-scene.beach::before {
+    content: '';
+    position: absolute;
+    bottom: 25%;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to bottom, 
+        #0288D1 0%, 
+        #03A9F4 30%, 
+        #4FC3F7 60%,
+        #81D4FA 100%);
+    z-index: 1;
+}
+
+/* Beach - Sand + Palm */
+.outdoor-scene.beach::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    background: 
+        /* Palm tree trunk */
+        linear-gradient(85deg, #5D4037 0%, #4E342E 100%) no-repeat 15% 20% / 8px 60%,
+        /* Palm fronds */
+        radial-gradient(ellipse 40px 15px at 12% 15%, #2E7D32 70%, transparent 70%),
+        radial-gradient(ellipse 45px 12px at 20% 18%, #388E3C 70%, transparent 70%),
+        radial-gradient(ellipse 35px 10px at 8% 20%, #43A047 70%, transparent 70%),
+        radial-gradient(ellipse 50px 12px at 18% 12%, #2E7D32 70%, transparent 70%),
+        /* Sand */
+        linear-gradient(to bottom, #FDD835 0%, #F9A825 50%, #F57F17 100%);
+    background-size: 8px 40%, 40px 15px, 45px 12px, 35px 10px, 50px 12px, 100% 100%;
+    background-position: 15% 0%, 12% 5%, 20% 8%, 8% 10%, 18% 2%, 0 0;
+    z-index: 2;
+}
+
+/* Beach Waves Animation */
+.outdoor-scene.beach .wave-layer {
+    position: absolute;
+    bottom: 24%;
+    left: 0;
+    width: 200%;
+    height: 15px;
+    background: repeating-linear-gradient(90deg, 
+        transparent 0px, 
+        transparent 20px, 
+        rgba(255,255,255,0.6) 25px, 
+        transparent 30px);
+    animation: waveMove 3s linear infinite;
+    z-index: 3;
+}
+
+@keyframes waveMove {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* ===== WEATHER OVERLAY LAYERS ===== */
+.weather-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Rain Layer - opposite 45 degree angle (-45 / 135deg), bigger drops, more spread out */
+.weather-layer.rain {
+    background-image: 
+        /* Big drops */
+        linear-gradient(135deg, transparent 0%, transparent 42%, rgba(150,180,220,0.6) 48%, rgba(130,160,200,0.7) 52%, transparent 58%, transparent 100%);
+    background-size: 40px 60px;
+    background-repeat: repeat;
+    animation: rainFallNeg45 0.5s linear infinite;
+}
+
+.weather-layer.rain::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 200%;
+    height: 300%;
+    background-image: 
+        repeating-linear-gradient(
+            135deg,
+            transparent 0px,
+            transparent 20px,
+            rgba(140,170,210,0.5) 22px,
+            rgba(120,150,190,0.6) 25px,
+            transparent 27px,
+            transparent 55px
+        );
+    animation: rainFallNeg45 0.4s linear infinite;
+}
+
+.weather-layer.rain::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 200%;
+    height: 300%;
+    background-image: 
+        repeating-linear-gradient(
+            135deg,
+            transparent 0px,
+            transparent 35px,
+            rgba(100,140,180,0.4) 38px,
+            rgba(80,120,160,0.5) 42px,
+            transparent 45px,
+            transparent 80px
+        );
+    animation: rainFallNeg45 0.6s linear infinite 0.15s;
+}
+
+@keyframes rainFallNeg45 {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-40px, 60px); }
+}
+
+/* Snow Layer */
+.weather-layer.snow {
+    background-image: 
+        radial-gradient(circle 3px, rgba(255,255,255,0.9) 100%, transparent 100%),
+        radial-gradient(circle 2px, rgba(255,255,255,0.7) 100%, transparent 100%),
+        radial-gradient(circle 4px, rgba(255,255,255,0.8) 100%, transparent 100%);
+    background-size: 50px 50px, 70px 70px, 90px 90px;
+    background-position: 0 0, 20px 30px, 40px 10px;
+    animation: snowFall 8s linear infinite;
+}
+
+@keyframes snowFall {
+    0% { 
+        background-position: 0 -50px, 20px -20px, 40px -40px; 
+    }
+    100% { 
+        background-position: -30px 400px, 50px 400px, 10px 400px; 
+    }
+}
+
+/* Wind Swirl Layer */
+.weather-layer.wind {
+    opacity: 0;
+    animation: windGust 12s ease-in-out infinite;
+}
+
+.weather-layer.wind::before {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: -100%;
+    width: 200%;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255,255,255,0.1) 20%, 
+        rgba(255,255,255,0.3) 50%, 
+        rgba(255,255,255,0.1) 80%, 
+        transparent 100%);
+    transform: rotate(-5deg);
+    animation: windSwoosh 4s ease-in-out infinite;
+}
+
+.weather-layer.wind::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -100%;
+    width: 200%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255,255,255,0.15) 30%, 
+        rgba(255,255,255,0.25) 50%, 
+        rgba(255,255,255,0.15) 70%, 
+        transparent 100%);
+    transform: rotate(3deg);
+    animation: windSwoosh 5s ease-in-out infinite 0.5s;
+}
+
+@keyframes windGust {
+    0%, 80%, 100% { opacity: 0; }
+    85%, 95% { opacity: 1; }
+}
+
+@keyframes windSwoosh {
+    0% { transform: translateX(0) rotate(-5deg); }
+    100% { transform: translateX(100%) rotate(-5deg); }
+}
+
+/* Sunny Rays Layer */
+.weather-layer.sunny {
+    background: radial-gradient(circle at 80% 20%, 
+        rgba(255, 235, 59, 0.3) 0%, 
+        rgba(255, 235, 59, 0.1) 30%, 
+        transparent 60%);
+}
+
+.weather-layer.sunny::before {
+    content: '☀️';
+    position: absolute;
+    top: 10%;
+    right: 15%;
+    font-size: 50px;
+    filter: drop-shadow(0 0 15px rgba(255, 200, 0, 0.8));
+    animation: sunPulse 4s ease-in-out infinite;
+}
+
+@keyframes sunPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.9; }
+}
+
+/* Cloudy Layer */
+.weather-layer.cloudy::before,
+.weather-layer.cloudy::after {
+    content: '';
+    position: absolute;
+    background: rgba(200, 200, 200, 0.6);
+    border-radius: 50%;
+    filter: blur(10px);
+}
+
+.weather-layer.cloudy::before {
+    top: 10%;
+    left: 10%;
+    width: 80px;
+    height: 40px;
+    animation: cloudDrift 20s linear infinite;
+}
+
+.weather-layer.cloudy::after {
+    top: 25%;
+    left: 50%;
+    width: 100px;
+    height: 50px;
+    animation: cloudDrift 25s linear infinite 5s;
+}
+
+@keyframes cloudDrift {
+    0% { transform: translateX(-100px); }
+    100% { transform: translateX(400px); }
+}
+
+.sky-gradient.daytime {
+    background: linear-gradient(180deg, 
+        #87CEEB 0%, 
+        #B0D4E3 50%, 
+        #E0F0FF 100%);
+}
+
+.sky-gradient.evening {
+    background: linear-gradient(180deg, 
+        #FF6B6B 0%, 
+        #FFB347 30%, 
+        #4A5F7A 70%, 
+        #2C3E50 100%);
+}
+
+.sky-gradient.night {
+    background: linear-gradient(180deg, 
+        #0F1419 0%, 
+        #1A2332 50%, 
+        #243447 100%);
+}
+
+.weather-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.weather-overlay.rain::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: 0;
+    width: 100%;
+    height: 150%;
+    background-image: 
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.3) 3px, transparent 4px),
+        repeating-linear-gradient(180deg, transparent, transparent 10px, rgba(200,220,255,0.4) 11px, transparent 13px);
+    animation: rain 0.4s linear infinite;
+    z-index: 3;
+}
+
+.weather-overlay.rain::after {
+    content: '🌧️';
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    font-size: 40px;
+    animation: float 3s ease-in-out infinite;
+    z-index: 4;
+}
+
+.weather-overlay.snow::before {
+    content: '❄️ ❄️ ❄️ ❄️ ❄️ ❄️ ❄️ ❄️ ❄️ ❄️';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    font-size: 20px;
+    animation: snow 8s linear infinite;
+    white-space: nowrap;
+    line-height: 40px;
+    z-index: 3;
+}
+
+.weather-overlay.cloudy::after {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: -10%;
+    width: 120%;
+    height: 40%;
+    background: rgba(200, 200, 200, 0.4);
+    border-radius: 50%;
+    filter: blur(30px);
+}
+
+.weather-overlay.sunny::after {
+    content: '☀️';
+    position: absolute;
+    top: 15%;
+    right: 15%;
+    font-size: 60px;
+    animation: sunshine 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(255, 200, 0, 0.8));
+    z-index: 4;
+}
+
+@keyframes rain {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(20px); }
+}
+
+@keyframes snow {
+    0% { transform: translateY(0) translateX(0); }
+    100% { transform: translateY(420px) translateX(-30px); }
+}
+
+@keyframes sunshine {
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    50% { transform: scale(1.15) rotate(20deg); opacity: 0.95; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.window-sill {
+    position: absolute;
+    bottom: -12px;
+    left: -10px;
+    width: calc(100% + 20px);
+    height: 24px;
+    background: 
+        /* Wood grain texture */
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            transparent 2px,
+            rgba(80, 50, 30, 0.3) 3px,
+            transparent 4px
+        ),
+        linear-gradient(180deg, 
+            #A0784A 0%, 
+            #8B6914 15%,
+            #7A5A30 50%,
+            #6A4A20 85%,
+            #5A3A10 100%);
+    border-radius: 3px;
+    box-shadow: 
+        0 6px 12px rgba(0,0,0,0.4),
+        0 2px 4px rgba(0,0,0,0.3),
+        inset 0 2px 2px rgba(255,255,255,0.15),
+        inset 0 -2px 3px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+/* Plant on window sill */
+.window-sill::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 15%;
+    width: 35px;
+    height: 50px;
+    background: 
+        /* Leaves */
+        radial-gradient(ellipse 60% 40% at 30% 50%, #4A8C3A 0%, transparent 70%),
+        radial-gradient(ellipse 50% 45% at 70% 55%, #5A9C4A 0%, transparent 65%),
+        radial-gradient(ellipse 55% 35% at 50% 30%, #3A7C2A 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 45% 70%, #4A8C3A 0%, transparent 60%),
+        radial-gradient(ellipse 45% 40% at 60% 40%, #5AAC5A 0%, transparent 65%);
+    z-index: 5;
+}
+
+/* Plant pot */
+.window-sill::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: calc(15% + 8px);
+    width: 20px;
+    height: 22px;
+    background: linear-gradient(180deg, 
+        #C4623A 0%, 
+        #A0482A 50%,
+        #8A3820 100%);
+    border-radius: 2px 2px 4px 4px;
+    clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+    box-shadow: 
+        2px 2px 4px rgba(0,0,0,0.3),
+        inset -3px 0 6px rgba(0,0,0,0.2);
+    z-index: 4;
+}
+
+.weather-info {
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.6);
+    padding: 5px 15px;
+    border-radius: 15px;
+    display: flex;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: #FFF;
+    backdrop-filter: blur(5px);
+}
+
+.temperature {
+    font-weight: 600;
+}
+
+/* ================================================
+   DYNAMIC LIGHTING SYSTEM
+   ================================================ */
+
+.lighting-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    transition: opacity 1s ease;
+}
+
+.light-cone {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.4;
+    transition: opacity 1s ease;
+}
+
+.fridge-light {
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, 
+        rgba(255, 248, 220, 0.6) 0%, 
+        rgba(255, 248, 220, 0.3) 30%, 
+        transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 11;
+}
+
+.window-light {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(ellipse at center, 
+        rgba(135, 206, 235, 0.3) 0%, 
+        transparent 60%);
+    top: 150px;
+    right: 50px;
+    transition: background 1s ease, opacity 1s ease;
+}
+
+.window-light.daytime {
+    background: radial-gradient(ellipse at center, 
+        rgba(255, 248, 220, 0.4) 0%, 
+        rgba(255, 235, 180, 0.2) 40%, 
+        transparent 70%);
+    opacity: 0.6;
+}
+
+.window-light.evening {
+    background: radial-gradient(ellipse at center, 
+        rgba(255, 140, 100, 0.3) 0%, 
+        rgba(255, 180, 140, 0.15) 40%, 
+        transparent 70%);
+    opacity: 0.5;
+}
+
+.window-light.night {
+    background: radial-gradient(ellipse at center, 
+        rgba(70, 130, 180, 0.2) 0%, 
+        transparent 60%);
+    opacity: 0.3;
+}
+
+#app {
+    perspective: 1500px;
+    z-index: 5;
+}
+
+/* 3D Container Styling */
+#three-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+#css-container {
+    display: none; /* Not using CSS3D renderer anymore */
+}
+
+.fridge-container {
+    /* Hide the original CSS fridge since Three.js handles it */
+    display: none;
+}
+
+/* Keep interior/door elements hidden - Three.js renders the fridge */
+.fridge-interior, .fridge-door {
+    display: none;
+}
+
+/* Magnet overlay - HIDDEN (using 3D magnets now) */
+#magnetOverlay {
+    display: none;
+}
+
+/* --- Interior --- */
+.fridge-interior {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    transform: translateZ(-25px); /* Push interior back */
+}
+
+/* Interior Box (The actual white box inside) */
+.fridge-interior::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    border: 15px solid var(--frame-color); /* Thicker frame */
+    border-radius: 20px;
+    box-shadow: inset 0 0 60px rgba(0,0,0,0.2); 
+    z-index: -1;
+}
+
+.shelves {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.shelf {
+    border-bottom: 4px solid #ddd;
+    height: 30%;
+    position: relative;
+}
+
+.settings-panel {
+    background: linear-gradient(135deg, #FAFAFA 0%, #F0F0F0 100%);
+    padding: 20px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.settings-panel h2 {
+    margin-top: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #DDD;
+    padding-bottom: 10px;
+}
+
+.settings-panel select,
+.settings-panel input[type="color"] {
+    border: 1px solid #CCC;
+    border-radius: 4px;
+    background: white;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Mail Panel */
+.mail-panel {
+    background: linear-gradient(135deg, #FAFAFA 0%, #F0F0F0 100%);
+    padding: 20px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.mail-panel h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #DDD;
+    padding-bottom: 8px;
+}
+
+.mail-list {
+    margin: 10px 0;
+}
+
+.mail-item {
+    background: white;
+    border: 1px solid #DDD;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.mail-item:hover {
+    transform: translateX(3px);
+    border-color: #FFD700;
+}
+
+.mail-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.mail-from {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.mail-circle {
+    font-size: 0.75rem;
+    color: #888;
+    background: #F0F0F0;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.mail-subject {
+    font-size: 0.85rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.mail-actions {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.btn-convert {
+    background: linear-gradient(135deg, #FFD700 0%, #FFC700 100%);
+    border: 1px solid #E5B800;
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s;
+}
+
+.btn-convert:hover {
+    background: linear-gradient(135deg, #FFF 0%, #FFD700 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+.btn-convert:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #E0E0E0 0%, #D0D0D0 100%);
+    border: 1px solid #BBB;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #F0F0F0 0%, #E0E0E0 100%);
+}
+
+.loading {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* ================================================
+   MAIL STACK TABLE (LEFT SIDE)
+   ================================================ */
+
+/* ================================================
+   ATMOSPHERE OVERLAYS
+   ================================================ */
+
+.vignette-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, transparent 50%, rgba(0,0,0,0.4) 100%);
+    pointer-events: none;
+    z-index: 20;
+}
+
+.noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('noise.svg');
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 19;
+}
+
+/* ================================================
+   MAIL STACK (LEFT SIDE)
+   ================================================ */
+
+.mail-stack-table {
+    position: fixed;
+    left: 40px;
+    bottom: 40px;  /* Moved to bottom-left for better composition */
+    top: auto;
+    transform: none;
+    width: 220px;
+    perspective: 800px;
+    z-index: 15;
+}
+
+.table-surface {
+    background: #5D4037; /* Darker Wood */
+    height: 20px;
+    width: 100%;
+    border-radius: 4px;
+    position: relative;
+    transform: rotateX(20deg);
+    box-shadow: 0 20px 30px rgba(0,0,0,0.5);
+}
+
+.table-surface::before {
+    /* Table Top */
+    content: '';
+    position: absolute;
+    top: -120px;
+    left: -10px;
+    width: 110%;
+    height: 140px;
+    background: linear-gradient(135deg, #8D6E63 0%, #5D4037 100%);
+    transform: rotateX(60deg);
+    transform-origin: bottom center;
+    border-radius: 8px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+}
+
+/* Table Legs (Pseudo-elements for simple simple legs) */
+.mail-stack-table::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: 20px;
+    width: 10px;
+    height: 100px;
+    background: #3E2723;
+    box-shadow: 170px 0 0 #3E2723; /* Second leg */
+    z-index: -1;
+}
+
+.mail-stack {
+    position: absolute;
+    bottom: 25px;
+    left: 10px;
+    width: 200px;
+    height: 140px; /* Space for stack */
+    z-index: 20;
+    pointer-events: none; /* Let clicks pass to items */
+}
+
+.mail-stack-header {
+    position: absolute;
+    top: -50px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+    pointer-events: auto;
+}
+
+.mail-stack-header h3 {
+    display: none; /* Hide text title */
+}
+
+.mail-count {
+    background: #D32F2F;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    border: 2px solid white;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-10px);}
+    60% {transform: translateY(-5px);}
+}
+
+.mail-stack-item {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 120px;
+    background: #FFFBF0; /* Envelope paper color */
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    padding: 15px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    box-shadow: 
+        0 2px 5px rgba(0,0,0,0.1),
+        inset 0 0 20px rgba(0,0,0,0.02);
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+    /* Envelope pattern styling */
+    background-image: repeating-linear-gradient(45deg, transparent 0, transparent 10px, rgba(0,0,0,0.02) 10px, rgba(0,0,0,0.02) 11px);
+}
+
+.mail-stack-item::before {
+    /* Flap triangle */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; 
+    height: 0; 
+    border-left: 100px solid transparent;
+    border-right: 100px solid transparent;
+    border-top: 60px solid #F3EFE0;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+}
+
+.envelope-seal {
+    position: absolute;
+    top: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background: #D32F2F;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    z-index: 5;
+}
+
+.mail-stack-item:hover {
+    transform: translateY(-5px) scale(1.02) !important; /* Override inline styles on hover */
+    box-shadow: 0 10px 15px rgba(0,0,0,0.15);
+    z-index: 100 !important;
+}
+
+.mail-stack-item.unread {
+    /* Subtle unread indicator */
+    box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.3);
+}
+
+.mail-content-wrapper {
+    margin-top: 40px; /* Space for flap */
+    font-family: 'Courier New', Courier, monospace;
+    opacity: 0.8;
+}
+
+.mail-stack-from {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #333;
+    border-bottom: 1px solid #DDD;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+
+.mail-stack-preview {
+    font-size: 0.8rem;
+    color: #555;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mail-stack-icon {
+    display: none; /* Hide icon for cleaner envelope look */
+}
+
+.mail-stack-empty {
+    text-align: center;
+    color: rgba(255,255,255,0.5);
+    padding: 20px;
+    font-style: italic;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    margin-top: 100px;
+}
+
+.auto-open-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    background: #3E2723;
+    color: #EFEFEF;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-size: 0.75rem;
+    width: fit-content;
+}
+
+.auto-open-toggle input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="range"] {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #CCC;
+    border-radius: 4px;
+    background: white;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.form-group small {
+    display: block;
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 3px;
+    font-weight: normal;
+}
+
+/* --- The Door --- */
+.fridge-door {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+        #FAFAFA 0%, 
+        var(--fridge-color) 15%, 
+        var(--fridge-color) 85%, 
+        #D0D0D0 100%);
+    border: 3px solid var(--frame-color);
+    border-radius: 12px;
+    z-index: 2;
+    transform-origin: left center;
+    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+    box-shadow: 
+        inset 2px 2px 8px rgba(255,255,255,0.5),
+        inset -2px -2px 8px rgba(0,0,0,0.15),
+        20px 20px 60px rgba(0,0,0,0.4),
+        -5px 0 15px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.fridge-door.open {
+    transform: rotateY(-110deg);
+}
+
+.logo-sticker {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F0F0F0 100%);
+    color: #333;
+    padding: 8px 16px;
+    transform: rotate(-2deg);
+    border: 1px solid rgba(0,0,0,0.1);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 
+        2px 2px 8px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+    z-index: 5;
+    pointer-events: none;
+    border-radius: 3px;
+}
+
+.handle {
+    position: absolute;
+    width: 25px; /* Thicker handle */
+    height: 300px; /* Longer handle */
+    background: linear-gradient(90deg, 
+        #B8B8B8 0%, 
+        #D8D8D8 20%, 
+        #E8E8E8 50%, 
+        #D8D8D8 80%, 
+        #A8A8A8 100%);
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 99px; /* Pill shape */
+    top: 50%;
+    right: 30px; /* From edge */
+    transform-style: preserve-3d;
+    transform: translateY(-50%) translateZ(26px); /* Pop out from front */
+    cursor: pointer;
+    box-shadow: 
+        inset 2px 0 4px rgba(255,255,255,0.7),
+        inset -2px 0 4px rgba(0,0,0,0.3),
+        5px 5px 15px rgba(0,0,0,0.5); /* Stronger shadow */
+    transition: all 0.2s;
+    z-index: 20;
+}
+
+.handle:hover {
+    background-color: #fff;
+}
+
+/* --- Magnets --- */
+.magnet-surface {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Keep magnets inside */
+}
+
+.magnet {
+    position: absolute;
+    width: 80px;
+    height: auto;
+    background: #fff;
+    padding: 5px 5px 15px 5px; /* Polaroid style */
+    box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
+    cursor: grab;
+    transition: all 0.2s ease;
+    transform: rotate(var(--rotation, 0deg));
+    z-index: 10;
+    border: 1px solid #ddd;
+}
+
+.magnet img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid #eee;
+}
+
+.magnet-text {
+    display: none;
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 5px;
+    color: #333;
+    line-height: 1.1;
+}
+
+.magnet:hover {
+    z-index: 100;
+    transform: scale(2.5) rotate(0deg) !important;
+    box-shadow: 10px 10px 20px rgba(0,0,0,0.4);
+    cursor: pointer;
+}
+
+.magnet:hover .magnet-text {
+    display: block;
+}
+
+.magnet:active {
+    cursor: grabbing;
+}
+
+/* Hover outline effects */
+.fridge-door:hover,
+.handle:hover,
+.magnet-surface:hover {
+    outline: 3px dashed rgba(255, 215, 0, 0.6);
+    outline-offset: 2px;
+}
+
+.magnet:hover {
+    outline: 3px solid #FFD700;
+    outline-offset: 3px;
+}
+
+/* Video support */
+.magnet video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid #eee;
+}
+
+.magnet video::-webkit-media-controls {
+    display: none !important;
+}
+
+.magnet.video-magnet video {
+    pointer-events: none;
+}
+
+.magnet.video-magnet:hover video {
+    pointer-events: auto;
+}
+
+.instructions {
+    position: absolute;
+    top: 40%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: rgba(0,0,0,0.3);
+    pointer-events: none;
+    font-size: 1.5rem;
+}
+
+/* Utility to hide things generally but keeps them accessible if needed */
+.hidden {
+    display: none;
+}
+
+/* Login Modal */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border: 4px solid #333;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 10px 10px 0 rgba(0,0,0,0.3);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    text-align: center;
+    font-size: 2rem;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 2px solid #333;
+    border-radius: 5px;
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+}
+
+.modal-content button {
+    width: 48%;
+    padding: 10px;
+    margin: 5px 1%;
+    background: #FFD700;
+    border: 2px solid #333;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+    box-shadow: 3px 3px 0 #000;
+}
+
+.modal-content button:hover {
+    background: #FFF;
+}
+
+.modal-content button:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 #000;
+}
+
+.error-msg {
+    color: #f00;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1rem;
+}
+
+/* ================================================
+   PIXEL ART THEME (8-Bit Alternative Style)
+   ================================================ */
+
+body[data-theme="pixel"] {
+    font-family: 'VT323', monospace;
+    background: linear-gradient(180deg, #2A2A2A 0%, #3A3A3A 100%);
+}
+
+body[data-theme="pixel"] .wall-layer.subway-tile {
+    background: #F5F5F5;
+}
+
+body[data-theme="pixel"] .wall-layer.painted {
+    background: #E8E4D9;
+}
+
+body[data-theme="pixel"] .wall-layer.wood-panel {
+    background: #A67C52;
+}
+
+body[data-theme="pixel"] .wall-layer.retro-yellow {
+    background: #F5E6A0;
+}
+
+body[data-theme="pixel"] .floor-layer {
+    background: #6B5547;
+}
+
+body[data-theme="pixel"] .fridge-door {
+    background: var(--fridge-color);
+    border: 4px solid var(--frame-color);
+    border-radius: 20px;
+    box-shadow: \n        10px 10px 0px rgba(0,0,0,0.3),\n        inset 10px 0 0 rgba(255,255,255,0.2),\n        inset -10px 0 0 rgba(0,0,0,0.1);
+}
+
+body[data-theme="pixel"] .logo-sticker {
+    background: #FFD700;
+    color: #000;
+    padding: 5px 10px;
+    transform: rotate(15deg);
+    border: 2px solid #000;
+    font-size: 1.4rem;
+    box-shadow: 3px 3px 0 #000;
+    border-radius: 0;
+    letter-spacing: 1px;
+}
+
+body[data-theme="pixel"] .handle {
+    width: 20px;
+    height: 120px;
+    background: var(--handle-color);
+    border: 3px solid var(--frame-color);
+    border-radius: 10px;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+}
+
+body[data-theme="pixel"] .handle:hover {
+    background: #FFF;
+}
+
+body[data-theme="pixel"] .magnet {
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+}
+
+body[data-theme="pixel"] .settings-panel {
+    background: #f0f0f0;
+    border: 3px solid #333;
+    border-radius: 5px;
+}
+
+body[data-theme="pixel"] .settings-panel h2 {
+    font-size: 1.5rem;
+    border-bottom: 3px solid #333;
+}
+
+body[data-theme="pixel"] .window-frame {
+    border: 4px solid #000;
+    border-radius: 0;
+    box-shadow: 8px 8px 0 rgba(0,0,0,0.3);
+}
+
+body[data-theme="pixel"] .window-glass {
+    border-radius: 0;
+}
+
+body[data-theme="pixel"] .light-cone {
+    filter: blur(40px);
+    opacity: 0.3;
+}
+
+body[data-theme="pixel"] .weather-info {
+    border: 2px solid #000;
+    border-radius: 0;
+    background: #333;
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+}
+
+body[data-theme="pixel"] .mail-stack-table {
+    filter: none;
+}
+
+body[data-theme="pixel"] .table-surface {
+    border-radius: 0;
+    box-shadow: 8px 8px 0 rgba(0,0,0,0.4);
+}
+
+body[data-theme="pixel"] .mail-stack {
+    border: 3px solid #000;
+    border-radius: 0;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+}
+
+body[data-theme="pixel"] .mail-stack-item {
+    border: 2px solid #333;
+    border-radius: 0;
+}
+
+body[data-theme="pixel"] .mail-stack-item:hover {
+    transform: translate(3px, -2px);
+    box-shadow: 3px 3px 0 #FFD700;
+}

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Fridge - Your Digital Kitchen Memory Board</title>
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Patrick Hand', cursive;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+            max-width: 800px;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: 'Patrick Hand', cursive;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .features {
+            background: white;
+            padding: 80px 20px;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 60px;
+            color: #667eea;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .feature-card p {
+            font-size: 1.2rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .how-it-works {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            padding: 80px 20px;
+        }
+
+        .how-it-works h2 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 60px;
+        }
+
+        .steps {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            align-items: center;
+        }
+
+        .step-number {
+            font-size: 3rem;
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .step-content p {
+            font-size: 1.3rem;
+            line-height: 1.6;
+        }
+
+        .self-host {
+            background: #2d3748;
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .self-host h2 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+        }
+
+        .self-host p {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .code-block {
+            background: #1a202c;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            text-align: left;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            color: #48bb78;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+        }
+
+        footer {
+            background: #1a202c;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .hero p {
+                font-size: 1.3rem;
+            }
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>🧊 The Fridge</h1>
+        <p>Your digital kitchen memory board. Pin photos, track countdowns, and share moments with friends—just like the real thing.</p>
+        <div class="cta-buttons">
+            <a href="https://github.com/yourusername/TheFridge.US" class="btn btn-primary">Self-Host (Docker)</a>
+            <a href="#how-it-works" class="btn btn-secondary">Learn More</a>
+        </div>
+    </div>
+
+    <section class="features">
+        <h2>✨ Features</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📷</div>
+                <h3>Photo Magnets</h3>
+                <p>Upload and pin your favorite photos. Drag, rotate, and arrange them just like real fridge magnets.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <h3>Calendar Countdown</h3>
+                <p>Track important events with a visual countdown displayed right on your fridge door.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Social Circles</h3>
+                <p>Share your fridge with friends and family. Send mail and convert messages to magnets.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Customizable</h3>
+                <p>Change fridge colors, wall themes, and outdoor scenes to match your style.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌤️</div>
+                <h3>Live Weather</h3>
+                <p>See real-time weather and day/night cycles through your kitchen window.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h3>Private & Secure</h3>
+                <p>Self-host with Docker for complete control over your data.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works" id="how-it-works">
+        <h2>🚀 How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Click the Fridge</h3>
+                    <p>Click anywhere on the fridge door to open the menu and choose to add a photo or calendar event.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Add Your Content</h3>
+                    <p>Upload photos or create calendar countdowns. Each photo gets a magnet clip with your initial.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Arrange & View</h3>
+                    <p>Drag magnets around, click to view fullscreen, or flip them to see the back. Double-click to delete.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Customize</h3>
+                    <p>Open the fridge to access settings shelves. Change colors, scenes, and wall themes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="self-host">
+        <h2>🐳 Self-Host with Docker</h2>
+        <p>Run The Fridge on your own server with full control over your data. Simple one-command setup.</p>
+        
+        <div class="code-block">
+            <code>docker-compose up -d</code>
+        </div>
+
+        <p style="font-size: 1.2rem; margin-top: 20px;">Visit the <a href="https://github.com/yourusername/TheFridge.US" style="color: #48bb78;">GitHub repository</a> for complete installation instructions.</p>
+
+        <div class="cta-buttons" style="margin-top: 40px;">
+            <a href="https://github.com/yourusername/TheFridge.US" class="btn btn-primary">View on GitHub</a>
+            <a href="https://github.com/yourusername/TheFridge.US/blob/main/docs/README.md" class="btn btn-secondary">Read Docs</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 The Fridge. Open source project. <a href="https://github.com/yourusername/TheFridge.US">GitHub</a></p>
+        <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.7;">This landing page is hosted on Cloudflare Pages. For the full app with authentication and persistence, self-host with Docker.</p>
+    </footer>
+</body>
+</html>
